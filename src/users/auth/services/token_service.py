@@ -4,7 +4,7 @@ from uuid import uuid4
 
 import jwt
 
-from src.users.auth.schemas import AccessTokenSchema, RefreshTokenSchema, TokenResponseSchema
+from src.users.auth.models import AccessTokenModel, RefreshTokenModel, TokenPairModel
 from src.config import get_settings
 from src.users.models import User
 
@@ -17,16 +17,16 @@ class TokenService:
     def __init__(self) -> None:
         self._settings = get_settings()
 
-    def generate_token(self, user: User) -> TokenResponseSchema:
+    def generate_token(self, user: User) -> TokenPairModel:
         now = int(time.time())
-        access_token = AccessTokenSchema(
+        access_token = AccessTokenModel(
             sub=str(user.id),
             iat=now,
             exp=now + self._settings.security.jwt_access_token_expire_secs,
             iss=self._settings.security.jwt_issuer,
             jti=str(uuid4())[:8],
         )
-        refresh_token = RefreshTokenSchema(
+        refresh_token = RefreshTokenModel(
             sub=str(user.id),
             iat=now,
             exp=now + self._settings.security.refresh_token_expire_secs,
@@ -43,7 +43,7 @@ class TokenService:
             self._settings.security.jwt_secret_key.get_secret_value(),
             algorithm="HS256",
         )
-        return TokenResponseSchema(
+        return TokenPairModel(
             access_token=encoded_access_token,
             refresh_token=encoded_refresh_token,
         )

@@ -5,7 +5,7 @@ from fastapi import HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials
 from typing_extensions import override
 
-from src.users.auth.schemas import RegistrationSchema, TokenResponseSchema
+from src.users.auth.models import RegistrationModel, TokenPairModel
 from src.users.auth.services.password_service import PasswordService
 from src.users.auth.services.token_service import TokenService
 from src.config import get_settings
@@ -18,15 +18,10 @@ class AbstractUserService(ABC):
     def __init__(self, user_repository: AbstractUserRepository): ...
 
     @abstractmethod
-    async def get_current_user(
-        self, credentials: HTTPAuthorizationCredentials
-    ) -> User: ...
-
-    @abstractmethod
     async def register_user(self, user_data) -> dict: ...
 
     @abstractmethod
-    async def login_user(self, email: str, password: str) -> dict: ...
+    async def login_user(self, email: str, password: str) -> TokenPairModel: ...
 
     @abstractmethod
     async def authenticate(
@@ -43,7 +38,7 @@ class UserService(AbstractUserService):
         self._token_service = TokenService()
 
     @override
-    async def get_current_user(self, credentials: HTTPAuthorizationCredentials) -> User:
+    async def authenticate(self, credentials: HTTPAuthorizationCredentials) -> User:
         try:
             payload = jwt.decode(
                 credentials.credentials,
@@ -82,7 +77,7 @@ class UserService(AbstractUserService):
         return user
 
     @override
-    async def register_user(self, user_data: RegistrationSchema) -> dict:
+    async def register_user(self, user_data: RegistrationModel) -> dict:
         existing_user = await self.user_repository.get_user_by_email(user_data.email)
         if existing_user:
             raise HTTPException(
@@ -98,10 +93,10 @@ class UserService(AbstractUserService):
             )
         )
 
-        return self._serialize_user(user)
+        return user.serialise()
 
     @override
-    async def login_user(self, email: str, password: str) -> TokenResponseSchema:
+    async def login_user(self, email: str, password: str) -> TokenPairModel:
         user = await self.user_repository.get_user_by_email(email)
         if not user:
             raise HTTPException(
@@ -132,15 +127,6 @@ class UserService(AbstractUserService):
                 detail="User not found",
             )
 
-        return self._serialize_user(user)
+        return user.serialise()
 
-    def _serialize_user(self, user: User) -> dict:
-        return {
-            "id": user.id,
-            "email": user.email,
-            "full_name": user.full_name,
-            "is_active": user.is_active,
-            "is_superuser": user.is_superuser,
-            "created_at": user.created_at,
-            "updated_at": user.updated_at,
-        }
+

@@ -1,18 +1,17 @@
 from pydantic import BaseModel, EmailStr
 
 
-class RegistrationSchema(BaseModel):
-    email: EmailStr
-    password: str
-    full_name: str
-
-
-class LoginSchema(BaseModel):
+class RegistrationModel(BaseModel):
     email: EmailStr
     password: str
 
 
-class AccessTokenSchema(BaseModel):
+class LoginModel(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class AccessTokenModel(BaseModel):
     sub: str
     iat: int
     exp: int
@@ -20,7 +19,7 @@ class AccessTokenSchema(BaseModel):
     jti: str
 
 
-class RefreshTokenSchema(BaseModel):
+class RefreshTokenModel(BaseModel):
     sub: str
     iat: int
     exp: int
@@ -28,10 +27,10 @@ class RefreshTokenSchema(BaseModel):
     type: str
 
 
-class TokenResponseSchema(BaseModel):
+class TokenPairModel(BaseModel):
     access_token: str
     refresh_token: str
 
 
-class RefreshTokenRequestSchema(BaseModel):
+class TokenRefreshRequestModel(BaseModel):
     refresh_token: str

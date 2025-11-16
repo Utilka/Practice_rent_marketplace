@@ -16,7 +16,7 @@ class UserRole(str, enum.Enum):
     SELLER = "seller"
     ADMIN = "admin"
 
-class UserBase(Base):
+class User(Base):
     full_name: Mapped[str | None]
     email: Mapped[str]
     is_active: Mapped[bool] = mapped_column(default=True)
@@ -27,15 +27,26 @@ class UserBase(Base):
     def __repr__(self) -> str:
         return f"User(id={self.id}, email={self.email})"
 
+    def serialise(self) -> dict:
+        return {
+            "id": self.id,
+            "email": self.email,
+            "full_name": self.full_name,
+            "is_active": self.is_active,
+            "is_superuser": self.is_superuser,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
 
-class UserCreate(UserBase):
+
+class UserCreate(User):
     password: str  # plain text, straight from client
 
 
-class UserInDB(UserBase):
+class UserInDB(User):
     __tablename__ = "users"
     password_hash: str
 
 
-class UserPublic(UserBase):
+class UserPublic(User):
     pass

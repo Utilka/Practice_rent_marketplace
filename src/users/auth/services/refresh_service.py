@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 
-from src.users.auth.schemas import TokenResponseSchema
+from src.users.auth.models import TokenPairModel
 from src.users.auth.services.token_service import TokenService, TokenValidationError
 from src.users.repository import AbstractUserRepository
 
@@ -14,7 +14,7 @@ class RefreshService:
         self._user_repository = user_repository
         self._token_service = token_service or TokenService()
 
-    async def refresh(self, refresh_token: str) -> TokenResponseSchema:
+    async def refresh(self, refresh_token: str) -> TokenPairModel:
         try:
             payload = self._token_service.decode(refresh_token)
         except TokenValidationError:

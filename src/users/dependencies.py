@@ -23,4 +23,4 @@ async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
     user_service: UserService = Depends(get_user_service),
 ) -> User:
-    return await user_service.get_current_user(credentials)
+    return await user_service.authenticate(credentials)
