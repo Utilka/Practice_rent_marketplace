@@ -5,7 +5,7 @@ from fastapi import HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials
 from typing_extensions import override
 
-from src.users.auth.models import RegistrationModel, TokenPairModel
+from src.users.auth.schemas import RegistrationModel, TokenPairModel
 from src.users.auth.services.password_service import PasswordService
 from src.users.auth.services.token_service import TokenService
 from src.config import get_settings

@@ -1,12 +1,13 @@
 import enum
 
 
-from src.core.database import BaseModel
 
 
 from sqlalchemy import String, Boolean, Enum as SAEnum
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column
+
+from src.core.database.base_model import BaseORMModel
 
 
 class UserRole(str, enum.Enum):
@@ -14,7 +15,7 @@ class UserRole(str, enum.Enum):
     SELLER = "seller"
     ADMIN = "admin"
 
-class User(BaseModel):
+class User(BaseORMModel):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)

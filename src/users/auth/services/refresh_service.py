@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 
-from src.users.auth.models import TokenPairModel
+from src.users.auth.schemas import TokenPairModel
 from src.users.auth.services.token_service import TokenService, TokenValidationError
 from src.users.repository import AbstractUserRepository
 

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 
 from src.users.auth.dependencies import get_refresh_service, get_registration_service, get_login_service
-from src.users.auth.models import TokenPairModel, LoginModel, RegistrationModel, TokenRefreshRequestModel, \
+from src.users.auth.schemas import TokenPairModel, LoginModel, RegistrationModel, TokenRefreshRequestModel, \
     TokenResponseSchema
 from src.users.auth.services.login_service import LoginService
 from src.users.auth.services.refresh_service import RefreshService

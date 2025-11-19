@@ -34,8 +34,8 @@ class Database(BaseSettings):
 
 class Settings(BaseSettings):
     debug: bool = False
-    database: Database = Field(Database)
-    security: Security = Field(Security)
+    database: Database = Field(default_factory=Database)
+    security: Security = Field(default_factory=Security)
 
     @computed_field
     @property

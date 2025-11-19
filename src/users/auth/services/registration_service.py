@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 
-from src.users.auth.models import RegistrationModel
+from src.users.auth.schemas import RegistrationModel
 from src.users.auth.services.password_service import PasswordService
 from src.users.repository import AbstractUserRepository
 

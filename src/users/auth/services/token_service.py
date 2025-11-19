@@ -4,7 +4,7 @@ from uuid import uuid4
 
 import jwt
 
-from src.users.auth.models import AccessTokenModel, RefreshTokenModel, TokenPairModel
+from src.users.auth.schemas import AccessTokenModel, RefreshTokenModel, TokenPairModel
 from src.config import get_settings
 from src.users.models import User
 
